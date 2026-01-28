@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0062E3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Skyswipe - Discover Your Next Trip</title>
+  <meta name="description" content="Swipe to discover and shortlist your perfect trip. Find cities, neighbourhoods, and stays with Skyscanner pricing.">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/screens.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ============================================
+         LOGIN SCREEN
+         ============================================ -->
+    <div id="screen-login" class="screen screen-login active">
+      <div class="login-container">
+        <div class="login-logo">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="4"/>
+            <path d="M25 45L40 25L55 45" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M40 25V55" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="40" cy="55" r="3" fill="currentColor"/>
+          </svg>
+          <h1>Skyswipe</h1>
+        </div>
+        <p class="login-tagline">Swipe your way to the perfect trip</p>
+
+        <form id="login-form" class="login-form">
+          <div class="input-group">
+            <label for="login-email" class="input-label">Email address</label>
+            <input
+              type="email"
+              id="login-email"
+              class="input"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            Continue
+          </button>
+        </form>
+
+        <p class="login-footer">
+          By continuing, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================================
+         EXPLORE SCREEN
+         ============================================ -->
+    <div id="screen-explore" class="screen screen-explore">
+      <header class="explore-header">
+        <div class="explore-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="10" r="3"/>
+            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+          </svg>
+          <h2>Explore</h2>
+        </div>
+        <div class="explore-airport">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+          </svg>
+          <span>From LHR</span>
+        </div>
+      </header>
+
+      <div class="explore-content">
+        <div class="card-container">
+          <div id="level-indicator" class="level-indicator">
+            <div class="level-dot active" data-level="cities"></div>
+            <div class="level-dot" data-level="neighbourhoods"></div>
+            <div class="level-dot" data-level="properties"></div>
+            <span class="level-name">Cities</span>
+          </div>
+
+          <div id="card-stack" class="card-stack">
+            <!-- Cards rendered by JS -->
+          </div>
+
+          <div id="progress-label" class="progress">
+            <!-- Progress rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="explore-actions">
+        <button id="btn-dismiss" class="btn btn-action btn-dismiss" aria-label="Dismiss">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+
+        <button id="btn-info" class="btn btn-action btn-info" aria-label="More info">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </button>
+
+        <button id="btn-save" class="btn btn-action btn-save" aria-label="Save">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="keyboard-hints">
+        <span class="keyboard-hint"><span class="key">&larr;</span> Dismiss</span>
+        <span class="keyboard-hint"><span class="key">&rarr;</span> Save</span>
+        <span class="keyboard-hint"><span class="key">Enter</span> Details</span>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SHORTLIST SCREEN
+         ============================================ -->
+    <div id="screen-shortlist" class="screen screen-shortlist">
+      <header class="shortlist-header">
+        <h2>Your Shortlist</h2>
+        <div id="shortlist-summary" class="shortlist-summary">
+          <!-- Summary rendered by JS -->
+        </div>
+        <div id="shortlist-tabs" class="tabs">
+          <button class="tab active" data-tab="cities">Cities</button>
+          <button class="tab" data-tab="neighbourhoods">Areas</button>
+          <button class="tab" data-tab="properties">Stays</button>
+        </div>
+      </header>
+
+      <div id="shortlist-content" class="shortlist-content scrollable">
+        <div class="shortlist-section active" data-section="cities">
+          <!-- Content rendered by JS -->
+        </div>
+        <div class="shortlist-section" data-section="neighbourhoods">
+          <!-- Content rendered by JS -->
+        </div>
+        <div class="shortlist-section" data-section="properties">
+          <!-- Content rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         SETTINGS SCREEN
+         ============================================ -->
+    <div id="screen-settings" class="screen screen-settings">
+      <header class="settings-header">
+        <h2>Settings</h2>
+      </header>
+
+      <div class="settings-content scrollable">
+        <div class="settings-section">
+          <div class="user-profile">
+            <div id="user-avatar" class="user-avatar">?</div>
+            <div class="user-info">
+              <h3 id="user-name">Traveller</h3>
+              <p id="user-email">email@example.com</p>
+            </div>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-label">Home Airport</div>
+              <div id="home-airport" class="settings-item-value">LHR</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Preferences</div>
+
+          <div class="settings-item">
+            <div class="settings-item-content">
+              <div class="settings-item-label">Personalisation</div>
+              <div class="settings-item-value">Rank cards based on your preferences</div>
+            </div>
+            <div id="personalisation-toggle" class="toggle-switch active"></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Account</div>
+
+          <button id="btn-logout" class="settings-item" style="width: 100%; text-align: left;">
+            <div class="settings-item-content">
+              <div class="settings-item-label">Log Out</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </button>
+
+          <button id="btn-clear-data" class="settings-item settings-danger" style="width: 100%; text-align: left;">
+            <div class="settings-item-content">
+              <div class="settings-item-label">Clear All Data</div>
+              <div class="settings-item-value">Remove all saved trips and preferences</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="settings-section" style="text-align: center; background: none; box-shadow: none;">
+          <p class="text-sm text-muted">
+            Skyswipe Demo &bull; Powered by Skyscanner
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         BOTTOM NAVIGATION
+         ============================================ -->
+    <nav class="nav" style="display: none;">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" data-screen="explore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+            </svg>
+            <span>Explore</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-screen="shortlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>Shortlist</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" data-screen="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ============================================
+         DETAIL MODAL
+         ============================================ -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <header class="modal-header">
+          <h3 class="modal-title">Details</h3>
+          <button class="modal-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </header>
+        <div class="modal-body">
+          <!-- Content rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/swipe.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/shortlist.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
