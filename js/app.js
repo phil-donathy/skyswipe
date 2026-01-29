@@ -3,6 +3,8 @@
 const App = {
   currentScreen: 'login',
   elements: {},
+  onboardingStep: 1,
+  lastSavedCity: null,
 
   // Initialize application
   init() {
@@ -16,8 +18,17 @@ const App = {
 
     // Check auth state
     if (Auth.isLoggedIn()) {
-      this.showScreen('explore');
-      this.initExplore();
+      const settings = Storage.getSettings();
+      if (!settings.airportSelected) {
+        this.showScreen('airport');
+      } else if (!settings.onboardingComplete) {
+        this.showScreen('explore');
+        this.initExplore();
+        this.showOnboarding();
+      } else {
+        this.showScreen('explore');
+        this.initExplore();
+      }
     } else {
       this.showScreen('login');
     }
@@ -39,6 +50,7 @@ const App = {
     this.elements = {
       // Screens
       loginScreen: document.getElementById('screen-login'),
+      airportScreen: document.getElementById('screen-airport'),
       exploreScreen: document.getElementById('screen-explore'),
       shortlistScreen: document.getElementById('screen-shortlist'),
       settingsScreen: document.getElementById('screen-settings'),
@@ -46,6 +58,17 @@ const App = {
       // Login
       loginForm: document.getElementById('login-form'),
       loginEmail: document.getElementById('login-email'),
+
+      // Airport selection
+      airportSearch: document.getElementById('airport-search'),
+      airportResults: document.getElementById('airport-results'),
+      airportChips: document.querySelectorAll('.airport-chip'),
+
+      // Onboarding
+      onboardingOverlay: document.getElementById('onboarding-overlay'),
+      onboardingNext: document.getElementById('onboarding-next'),
+      onboardingSteps: document.querySelectorAll('.onboarding-step'),
+      onboardingDots: document.querySelectorAll('.onboarding-dots .dot'),
 
       // Explore
       cardStack: document.getElementById('card-stack'),
@@ -55,6 +78,16 @@ const App = {
       btnDismiss: document.getElementById('btn-dismiss'),
       btnSave: document.getElementById('btn-save'),
       btnInfo: document.getElementById('btn-info'),
+      tapHint: document.getElementById('tap-hint'),
+      currentAirport: document.getElementById('current-airport'),
+      airportDisplay: document.getElementById('airport-display'),
+
+      // Unlock notification
+      unlockNotification: document.getElementById('unlock-notification'),
+      unlockTitle: document.getElementById('unlock-title'),
+      unlockMessage: document.getElementById('unlock-message'),
+      unlockExplore: document.getElementById('unlock-explore'),
+      unlockLater: document.getElementById('unlock-later'),
 
       // Shortlist
       shortlistTabs: document.getElementById('shortlist-tabs'),
@@ -67,6 +100,7 @@ const App = {
       userEmail: document.getElementById('user-email'),
       homeAirport: document.getElementById('home-airport'),
       personalisationToggle: document.getElementById('personalisation-toggle'),
+      btnChangeAirport: document.getElementById('btn-change-airport'),
       btnLogout: document.getElementById('btn-logout'),
       btnClearData: document.getElementById('btn-clear-data'),
 
@@ -97,6 +131,35 @@ const App = {
       });
     }
 
+    // Airport selection
+    this.elements.airportChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const code = chip.dataset.code;
+        const name = chip.dataset.name;
+        this.selectAirport(code, name);
+      });
+    });
+
+    // Airport display button (to change airport)
+    if (this.elements.airportDisplay) {
+      this.elements.airportDisplay.addEventListener('click', () => {
+        this.showScreen('airport');
+      });
+    }
+
+    if (this.elements.btnChangeAirport) {
+      this.elements.btnChangeAirport.addEventListener('click', () => {
+        this.showScreen('airport');
+      });
+    }
+
+    // Onboarding
+    if (this.elements.onboardingNext) {
+      this.elements.onboardingNext.addEventListener('click', () => {
+        this.nextOnboardingStep();
+      });
+    }
+
     // Swipe action buttons
     if (this.elements.btnDismiss) {
       this.elements.btnDismiss.addEventListener('click', () => {
@@ -119,6 +182,20 @@ const App = {
       });
     }
 
+    // Unlock notification buttons
+    if (this.elements.unlockExplore) {
+      this.elements.unlockExplore.addEventListener('click', () => {
+        this.hideUnlockNotification();
+        this.switchToNeighbourhoods();
+      });
+    }
+
+    if (this.elements.unlockLater) {
+      this.elements.unlockLater.addEventListener('click', () => {
+        this.hideUnlockNotification();
+      });
+    }
+
     // Settings handlers
     if (this.elements.personalisationToggle) {
       this.elements.personalisationToggle.addEventListener('click', () => {
@@ -137,6 +214,76 @@ const App = {
         this.handleClearData();
       });
     }
+  },
+
+  // Select airport
+  selectAirport(code, name) {
+    Storage.updateSettings({
+      homeAirport: code,
+      homeAirportName: name,
+      airportSelected: true
+    });
+
+    // Update display
+    if (this.elements.currentAirport) {
+      this.elements.currentAirport.textContent = `From ${code}`;
+    }
+
+    // Check if onboarding needed
+    const settings = Storage.getSettings();
+    if (!settings.onboardingComplete) {
+      this.showScreen('explore');
+      this.initExplore();
+      this.showOnboarding();
+    } else {
+      this.showScreen('explore');
+      this.initExplore();
+    }
+
+    Toast.show(`Home airport set to ${code}`, 'success');
+  },
+
+  // Show onboarding
+  showOnboarding() {
+    this.onboardingStep = 1;
+    this.updateOnboardingUI();
+    this.elements.onboardingOverlay.classList.add('active');
+  },
+
+  // Next onboarding step
+  nextOnboardingStep() {
+    if (this.onboardingStep < 3) {
+      this.onboardingStep++;
+      this.updateOnboardingUI();
+    } else {
+      this.completeOnboarding();
+    }
+  },
+
+  // Update onboarding UI
+  updateOnboardingUI() {
+    // Update steps visibility
+    this.elements.onboardingSteps.forEach(step => {
+      const stepNum = parseInt(step.dataset.step);
+      step.style.display = stepNum === this.onboardingStep ? 'block' : 'none';
+    });
+
+    // Update dots
+    this.elements.onboardingDots.forEach(dot => {
+      const dotStep = parseInt(dot.dataset.step);
+      dot.classList.toggle('active', dotStep === this.onboardingStep);
+    });
+
+    // Update button text
+    if (this.elements.onboardingNext) {
+      this.elements.onboardingNext.textContent = this.onboardingStep === 3 ? 'Get Started' : 'Next';
+    }
+  },
+
+  // Complete onboarding
+  completeOnboarding() {
+    Storage.updateSettings({ onboardingComplete: true });
+    this.elements.onboardingOverlay.classList.remove('active');
   },
 
   // Navigate to screen
@@ -176,7 +323,7 @@ const App = {
     // Show/hide nav bar
     const navBar = document.querySelector('.nav');
     if (navBar) {
-      navBar.style.display = screenName === 'login' ? 'none' : 'block';
+      navBar.style.display = ['login', 'airport'].includes(screenName) ? 'none' : 'block';
     }
 
     // Enable/disable keyboard nav
@@ -193,9 +340,8 @@ const App = {
     const result = Auth.login(email);
 
     if (result.success) {
-      this.showScreen('explore');
-      this.initExplore();
-      Toast.show(`Welcome, ${result.user.name}!`, 'success');
+      // Show airport selection for new users
+      this.showScreen('airport');
     } else {
       Toast.show(result.error, 'error');
     }
@@ -220,11 +366,24 @@ const App = {
 
   // Initialize explore screen
   initExplore() {
+    // Update airport display
+    const settings = Storage.getSettings();
+    if (this.elements.currentAirport && settings.homeAirport) {
+      this.elements.currentAirport.textContent = `From ${settings.homeAirport}`;
+    }
+
     Cards.init(this.elements.cardStack, {
       onCardAction: (direction, item, level) => {
         this.updateProgress();
         if (direction === 'right') {
-          Toast.show(`${item.name} saved!`, 'success');
+          // Show toast with correct item name
+          Toast.show(`${item.name} saved to shortlist!`, 'success');
+
+          // If it's a city, show unlock notification
+          if (level === 'cities') {
+            this.lastSavedCity = item;
+            this.showUnlockNotification(item);
+          }
         }
       },
       onQueueEmpty: () => {
@@ -242,6 +401,41 @@ const App = {
     } else {
       this.showExploreComplete();
     }
+  },
+
+  // Show unlock notification
+  showUnlockNotification(city) {
+    if (!this.elements.unlockNotification) return;
+
+    const neighbourhoods = Data.getNeighbourhoodsByCity(city.id);
+
+    if (this.elements.unlockTitle) {
+      this.elements.unlockTitle.textContent = `${neighbourhoods.length} Neighbourhoods Unlocked!`;
+    }
+
+    if (this.elements.unlockMessage) {
+      this.elements.unlockMessage.textContent = `Explore areas in ${city.name} or continue browsing cities`;
+    }
+
+    this.elements.unlockNotification.classList.add('show');
+
+    // Auto-hide after 8 seconds
+    setTimeout(() => {
+      this.hideUnlockNotification();
+    }, 8000);
+  },
+
+  // Hide unlock notification
+  hideUnlockNotification() {
+    if (this.elements.unlockNotification) {
+      this.elements.unlockNotification.classList.remove('show');
+    }
+  },
+
+  // Switch to neighbourhoods
+  switchToNeighbourhoods() {
+    Cards.currentLevel = 'neighbourhoods';
+    Cards.loadNextCards();
   },
 
   // Update progress display
@@ -305,11 +499,12 @@ const App = {
       let completeMsg = this.elements.exploreContent.querySelector('.explore-complete');
 
       if (cardContainer) cardContainer.style.display = 'none';
+      if (this.elements.tapHint) this.elements.tapHint.style.display = 'none';
 
       if (!completeMsg) {
         completeMsg = document.createElement('div');
         completeMsg.className = 'explore-complete';
-        this.elements.exploreContent.appendChild(completeMsg);
+        this.elements.exploreContent.insertBefore(completeMsg, this.elements.exploreContent.querySelector('.explore-actions'));
       }
 
       const summary = Shortlist.getSummary();
@@ -320,7 +515,7 @@ const App = {
           <polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
         <h2>You're all caught up!</h2>
-        <p>You've saved ${summary.cities} cities, ${summary.neighbourhoods} neighbourhoods, and ${summary.properties} stays.</p>
+        <p>You've saved ${summary.cities} ${summary.cities === 1 ? 'city' : 'cities'}, ${summary.neighbourhoods} ${summary.neighbourhoods === 1 ? 'area' : 'areas'}, and ${summary.properties} ${summary.properties === 1 ? 'stay' : 'stays'}.</p>
         <button class="btn btn-primary" onclick="App.navigateTo('shortlist')">
           View Your Shortlist
         </button>
@@ -328,6 +523,10 @@ const App = {
 
       completeMsg.style.display = 'block';
     }
+
+    // Hide action buttons
+    const actions = document.querySelector('.explore-actions');
+    if (actions) actions.style.display = 'none';
 
     // Disable swipe keyboard nav
     KeyboardNav.disable();
@@ -346,12 +545,11 @@ const App = {
   updateShortlistSummary() {
     if (this.elements.shortlistSummary) {
       const summary = Shortlist.getSummary();
-      const cost = Shortlist.getEstimatedCost();
 
       this.elements.shortlistSummary.innerHTML = `
-        <span><strong>${summary.cities}</strong> cities</span>
-        <span><strong>${summary.neighbourhoods}</strong> areas</span>
-        <span><strong>${summary.properties}</strong> stays</span>
+        <span><strong>${summary.cities}</strong> ${summary.cities === 1 ? 'city' : 'cities'}</span>
+        <span><strong>${summary.neighbourhoods}</strong> ${summary.neighbourhoods === 1 ? 'area' : 'areas'}</span>
+        <span><strong>${summary.properties}</strong> ${summary.properties === 1 ? 'stay' : 'stays'}</span>
       `;
     }
   },
@@ -376,7 +574,10 @@ const App = {
 
     // Update settings values
     if (this.elements.homeAirport) {
-      this.elements.homeAirport.textContent = settings.homeAirport;
+      const airportText = settings.homeAirportName
+        ? `${settings.homeAirport} - ${settings.homeAirportName}`
+        : settings.homeAirport;
+      this.elements.homeAirport.textContent = airportText;
     }
 
     if (this.elements.personalisationToggle) {
