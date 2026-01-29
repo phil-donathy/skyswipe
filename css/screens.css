@@ -468,14 +468,14 @@
 /* Action buttons ON the card */
 .card-actions {
   position: absolute;
-  bottom: var(--space-lg);
+  bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-md);
-  z-index: calc(var(--z-card) + 5);
+  z-index: 100;
   pointer-events: auto;
 }
 
