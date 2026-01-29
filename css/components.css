@@ -266,6 +266,73 @@
   letter-spacing: 0.05em;
 }
 
+/* Card action buttons - ON the card */
+.card-actions {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  z-index: 10;
+}
+
+.btn-card-action {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-card-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-card-action:active {
+  transform: scale(0.95);
+}
+
+.btn-card-dismiss {
+  color: var(--color-dismiss);
+  border-color: var(--color-dismiss);
+}
+
+.btn-card-dismiss:hover {
+  background-color: var(--color-dismiss);
+  color: var(--color-white);
+}
+
+.btn-card-info {
+  width: 44px;
+  height: 44px;
+  color: var(--color-sky-blue);
+  border-color: var(--color-sky-blue);
+}
+
+.btn-card-info:hover {
+  background-color: var(--color-sky-blue);
+  color: var(--color-white);
+}
+
+.btn-card-save {
+  color: var(--color-save);
+  border-color: var(--color-save);
+}
+
+.btn-card-save:hover {
+  background-color: var(--color-save);
+  color: var(--color-white);
+}
+
 /* Card swipe indicators */
 .card-indicator {
   position: absolute;

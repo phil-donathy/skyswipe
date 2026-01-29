@@ -465,77 +465,7 @@
   position: relative;
 }
 
-/* Action buttons ON the card */
-.card-actions {
-  position: absolute;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
-  z-index: 100;
-  pointer-events: auto;
-}
-
-.card-actions .btn-action {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-white);
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-  pointer-events: auto;
-}
-
-.card-actions .btn-action:hover {
-  transform: scale(1.1);
-}
-
-.card-actions .btn-action:active {
-  transform: scale(0.95);
-}
-
-.card-actions .btn-dismiss {
-  color: var(--color-dismiss);
-  border: 2px solid var(--color-dismiss);
-}
-
-.card-actions .btn-dismiss:hover {
-  background-color: var(--color-dismiss);
-  color: var(--color-white);
-}
-
-.card-actions .btn-info {
-  width: 44px;
-  height: 44px;
-  color: var(--color-sky-blue);
-  border: 2px solid var(--color-sky-blue);
-}
-
-.card-actions .btn-info:hover {
-  background-color: var(--color-sky-blue);
-  color: var(--color-white);
-}
-
-.card-actions .btn-save {
-  color: var(--color-save);
-  border: 2px solid var(--color-save);
-}
-
-.card-actions .btn-save:hover {
-  background-color: var(--color-save);
-  color: var(--color-white);
-}
-
-/* Position card-stack as relative container for the buttons */
-.card-stack {
-  position: relative;
-}
+/* Action buttons ON the card - positioned via JS now */
 
 /* Tap hint */
 .tap-hint {
