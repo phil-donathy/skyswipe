@@ -462,6 +462,90 @@
   flex: 1;
   width: 100%;
   max-width: 400px;
+  position: relative;
+}
+
+/* Action buttons ON the card */
+.card-actions {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  z-index: var(--z-card-active);
+  pointer-events: auto;
+}
+
+.card-actions .btn-action {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.card-actions .btn-action:hover {
+  transform: scale(1.1);
+}
+
+.card-actions .btn-action:active {
+  transform: scale(0.95);
+}
+
+.card-actions .btn-dismiss {
+  color: var(--color-dismiss);
+  border: 2px solid var(--color-dismiss);
+}
+
+.card-actions .btn-dismiss:hover {
+  background-color: var(--color-dismiss);
+  color: var(--color-white);
+}
+
+.card-actions .btn-info {
+  width: 44px;
+  height: 44px;
+  color: var(--color-sky-blue);
+  border: 2px solid var(--color-sky-blue);
+}
+
+.card-actions .btn-info:hover {
+  background-color: var(--color-sky-blue);
+  color: var(--color-white);
+}
+
+.card-actions .btn-save {
+  color: var(--color-save);
+  border: 2px solid var(--color-save);
+}
+
+.card-actions .btn-save:hover {
+  background-color: var(--color-save);
+  color: var(--color-white);
+}
+
+.card-actions .action-label {
+  display: none;
+}
+
+/* Position buttons at bottom of card stack area */
+.card-stack {
+  position: relative;
+}
+
+.card-container .card-actions {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin-top: var(--space-lg);
 }
 
 /* Tap hint */
@@ -489,36 +573,9 @@
   color: var(--color-sky-blue);
 }
 
-/* Action buttons */
+/* Hide the old explore-actions container - buttons are now on card */
 .explore-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-lg);
-  padding: var(--space-md) 0;
-  margin-top: auto;
-}
-
-.btn-action .action-label {
   display: none;
-}
-
-/* Show labels on desktop */
-@media (min-width: 768px) {
-  .btn-action {
-    flex-direction: column;
-    width: auto;
-    height: auto;
-    padding: var(--space-md) var(--space-lg);
-    border-radius: var(--radius-lg);
-  }
-
-  .btn-action .action-label {
-    display: block;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    margin-top: var(--space-xs);
-  }
 }
 
 /* Keyboard hints */
