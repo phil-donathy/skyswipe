@@ -468,14 +468,14 @@
 /* Action buttons ON the card */
 .card-actions {
   position: absolute;
-  bottom: 20px;
+  bottom: var(--space-lg);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-md);
-  z-index: var(--z-card-active);
+  z-index: calc(var(--z-card) + 5);
   pointer-events: auto;
 }
 
@@ -489,6 +489,7 @@
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
+  pointer-events: auto;
 }
 
 .card-actions .btn-action:hover {
@@ -531,21 +532,9 @@
   color: var(--color-white);
 }
 
-.card-actions .action-label {
-  display: none;
-}
-
-/* Position buttons at bottom of card stack area */
+/* Position card-stack as relative container for the buttons */
 .card-stack {
   position: relative;
-}
-
-.card-container .card-actions {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  transform: none;
-  margin-top: var(--space-lg);
 }
 
 /* Tap hint */
